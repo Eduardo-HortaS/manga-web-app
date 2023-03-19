@@ -1,8 +1,9 @@
 from django.db import models
-from .forms import UniprotForm
+from .forms import uniprotID
 
-# Create your models here.
-# 
-class UniProt(models.Model):
-    id = UniprotForm.id()
-    
+# A model that stores the id and data associated with it for processing. 
+class uniprotData(models.Model):
+    id = models.CharField(max_length=10)
+    name = models.TextField()
+    sequence = models.TextField()
+    features = models.TextField()
