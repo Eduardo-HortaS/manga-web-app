@@ -1,7 +1,8 @@
 import json
 import requests
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
+from django.urls import reverse
 from .forms import uniprotID
 from .models import uniprotData
 from django.core.exceptions import ValidationError
@@ -26,12 +27,17 @@ def prototype(request):
             sequence=data['results'][0]['sequence']['value'], 
             features=data['results'][0]['features'],
             )
-        return render(request, 'form.html', {'form': form})
+        print(protein_instance)
+        return HttpResponseRedirect(reverse('results', protein_instance)) # COMO FAÇO PARA PODER MANDAR PROTEIN_INSTANCE PARA O RESULTSVIEW?
+        #return render(request, 'results.html', {'id': protein_instance.id, 'name': protein_instance.name, 'sequence': protein_instance.sequence, 'features': protein_instance.features})
     else:
         form = uniprotID()
+    return render(request, 'form.html', {'form': form})
+
     
-    
-# def proteins(request):
+def resultsView(request):
+    return render(request, 'results.html', {'id': protein_instance.id, 'name': protein_instance.name, 'sequence': protein_instance.sequence, 'features': protein_instance.features})
+
     # show database instances
     
     

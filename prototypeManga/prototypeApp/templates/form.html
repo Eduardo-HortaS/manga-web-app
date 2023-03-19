@@ -1,5 +1,10 @@
-<form action="/input/" method="post">
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Submit">
-</form>
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Specify an UniProt ID:</h1>
+    <form action="/results/" method="post"> {% comment %} Como fazer esse formulário levar para a página de resultados results.html? {% endcomment %}
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Submit">
+    </form>
+{% endblock %}

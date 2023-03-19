@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>UniProt ID</h1>
+  <p>{{ id }}</p>
+
+  <h1>Protein Name</h1>
+  <p>{{ name }}</p>
+
+  <h1>Protein Sequence</h1>
+  <p>{{ sequence }}</p>
+
+  <h1>Protein Features</h1>
+  <ul>
+  {% for feature in features %}
+    <li>{{ feature['type'] }} - {{ feature['description'] }}</li>
+  {% empty %}
+    <li>No features found.</li>
+  {% endfor %}
+  </ul>
+{% endblock %}
