@@ -12,6 +12,7 @@
 
   <h1>Protein Features</h1>
   <ul>
+  {% comment %} Não sei como puxar todas as features de uma dada entrada aqui {% endcomment %}
   {% for feature in features %}
     <li>{{ feature['type'] }} - {{ feature['description'] }}</li>
   {% empty %}
