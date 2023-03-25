@@ -10,13 +10,17 @@
   <h1>Protein Sequence</h1>
   <p>{{ sequence }}</p>
 
+  <h1>Protein Feature Types</h1>
+  <p>{{ feature_type }}</p>
+
   <h1>Protein Features</h1>
-  <ul>
-  {% comment %} Não sei como puxar todas as features de uma dada entrada aqui {% endcomment %}
+  <p>{{ features }}</p>
+  
+  {% comment %} <ul>
   {% for feature in features %}
     <li>{{ feature['type'] }} - {{ feature['description'] }}</li>
   {% empty %}
     <li>No features found.</li>
   {% endfor %}
-  </ul>
+  </ul> {% endcomment %}
 {% endblock %}

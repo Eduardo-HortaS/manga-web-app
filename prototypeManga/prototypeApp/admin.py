@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import uniprotData
+from .models import Protein, FeatureType, Feature
 
 # Register your models here.
-admin.site.register(uniprotData)
+admin.site.register(Protein)
+admin.site.register(FeatureType)
+admin.site.register(Feature)
