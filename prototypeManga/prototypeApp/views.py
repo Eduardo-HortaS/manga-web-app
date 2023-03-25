@@ -7,14 +7,19 @@ from .forms import uniprotID
 from .models import Protein, FeatureType, Feature
 from django.core.exceptions import ValidationError
 
+
+# TODO: Você pode mover parte das operações pra outros arquivos, principalmente coisas que podem ser 
+# reutilizadas mais pra frente, como por exemplo acessar APIs
+# TODO: Nome dessa vista também não condiz com o papel dela
 def prototype(request):
     if request.method == 'POST':
         form = uniprotID(request.POST)
         if form.is_valid():
-            form.save()
-        url = f'https://rest.uniprot.org/uniprotkb/{form.uniprot_id}.json'
+            form.save() # TODO: Não entendi o que está sendo salvo aqui, já que sua classe não está associada a nenhum model
+        url = f'https://rest.uniprot.org/uniprotkb/{form.uniprot_id}.json' #TODO: Erro de logica, tem que usar o cleaned_data igual vc fez na linha #26. Pega o accession e salva numa variavel pra não precisar chamar o cleaned_data mais de uma vez
         response = requests.get(url)
         if response.status_code != 200:
+            # TODO: Se você der um raise aqui, seu servidor vai crashar, é isso realmente que você quer? Acho que é melhor mandar uma mensagem de erro na pagina dizendo que o UniProt não era valido
             raise ValidationError('Error connecting to UniProt API.')
         data = response.json()
         protein_instance = Protein(
@@ -24,20 +29,24 @@ def prototype(request):
             )
         protein_instance.save()
         for feature in data['features']:
+            # TODO: Tem certeza que esses campos estão sempre disponiveis? Caso contrario vai dar KeyError
             feature_type = feature['type']
             feature_description = feature['description']
             feature_start = feature['location']['start']['value']
             feature_end = feature['location']['end']['value']
+        # TODO: Aqui tem um erro de logica. feature_type esta sendo lida dentro de um loop, quando você associa aqui por fora do loop, você está pegando só o último valor de feature_type
         pi_feature_type = FeatureType(
             value=feature_type
         )
         pi_feature_type.save()
+        # TODO: O mesmo erro de logica citado acima, vali aqui também com feature_description, start e end.
         pi_feature = Feature(
             description=feature_description,
             start=feature_start,
             end=feature_end
         )
         pi_feature.save()
+        
         return HttpResponseRedirect(reverse('results', kwargs = {'acession_id_value' : protein_instance.acession_id}))
     else:
         form = uniprotID()
