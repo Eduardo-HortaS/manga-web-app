@@ -7,11 +7,11 @@ class Protein(models.Model):
     sequence = models.TextField()
     
 class FeatureType(models.Model):
-    value = models.CharField(max_length=255, null=False, blank=False)
+    value = models.CharField(max_length=255, null=True, blank=False) # Eduardo: parece que temos casos onde é nulo...
     
 class Feature(models.Model):
     protein = models.ForeignKey(Protein, on_delete=models.CASCADE)
     feature_type = models.ForeignKey(FeatureType, on_delete=models.CASCADE)
     description = models.CharField(max_length=255)
-    start = models.IntegerField(null=False, blank=False)
-    end = models.IntegerField(null=False, blank=False)
+    start = models.IntegerField(null=True, blank=False)
+    end = models.IntegerField(null=True, blank=False)

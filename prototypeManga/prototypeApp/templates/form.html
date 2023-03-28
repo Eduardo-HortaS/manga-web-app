@@ -2,8 +2,7 @@
 
 {% block content %}
     <h1>Specify an UniProt ID:</h1>
-    <!-- Removi o action aqui, pq vc tava redirecionando pra pagina /results sem nenhum parametro e sem passar pela vista do formulario -->
-    <form method="post"> {% comment %} Como fazer esse formulário levar para a página de resultados results.html? {% endcomment %}
+    <form method="post">
         {% csrf_token %}
         {{ form }}
         <input type="submit" value="Submit">

@@ -3,55 +3,43 @@ import requests
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, Http404
 from django.urls import reverse
-from .forms import uniprotID
+from .forms import ProteinInputForm
 from .models import Protein, FeatureType, Feature
-from django.core.exceptions import ValidationError
+from .general_utils import UniProtAPIResponseView
 
-
-# TODO: Você pode mover parte das operações pra outros arquivos, principalmente coisas que podem ser 
-# reutilizadas mais pra frente, como por exemplo acessar APIs
-# TODO: Nome dessa vista também não condiz com o papel dela
-def prototype(request):
+def ProteinInstantiationView(request):
     if request.method == 'POST':
-        form = uniprotID(request.POST)
+        form = ProteinInputForm(request.POST)
         if form.is_valid():
-            form.save() # TODO: Não entendi o que está sendo salvo aqui, já que sua classe não está associada a nenhum model
-        url = f'https://rest.uniprot.org/uniprotkb/{form.uniprot_id}.json' #TODO: Erro de logica, tem que usar o cleaned_data igual vc fez na linha #26. Pega o accession e salva numa variavel pra não precisar chamar o cleaned_data mais de uma vez
-        response = requests.get(url)
-        if response.status_code != 200:
-            # TODO: Se você der um raise aqui, seu servidor vai crashar, é isso realmente que você quer? Acho que é melhor mandar uma mensagem de erro na pagina dizendo que o UniProt não era valido
-            raise ValidationError('Error connecting to UniProt API.')
-        data = response.json()
+            acession = form.cleaned_data['uniprot_id']
+        if Protein.objects.filter(acession_id=acession).exists():     # Eduardo: coloquei no lugar certo? Parece dar erro 
+           return HttpResponseRedirect(reverse('results', kwargs = {'acession_id_value' : acession}))  
+        data = UniProtAPIResponseView(acession)
         protein_instance = Protein(
-            acession_id=form.cleaned_data('uniprot_id'),
+            acession_id=acession,
             name=data['proteinDescription']['recommendedName']['fullName']['value'], 
             sequence=data['sequence']['value'], 
             )
         protein_instance.save()
-        for feature in data['features']:
-            # TODO: Tem certeza que esses campos estão sempre disponiveis? Caso contrario vai dar KeyError
-            feature_type = feature['type']
-            feature_description = feature['description']
-            feature_start = feature['location']['start']['value']
-            feature_end = feature['location']['end']['value']
-        # TODO: Aqui tem um erro de logica. feature_type esta sendo lida dentro de um loop, quando você associa aqui por fora do loop, você está pegando só o último valor de feature_type
-        pi_feature_type = FeatureType(
-            value=feature_type
-        )
-        pi_feature_type.save()
-        # TODO: O mesmo erro de logica citado acima, vali aqui também com feature_description, start e end.
-        pi_feature = Feature(
-            description=feature_description,
-            start=feature_start,
-            end=feature_end
-        )
-        pi_feature.save()
-        
+        for feature in data.get('features', {}):
+            feature_type = feature.get('type')
+            feature_description = feature.get('description')
+            feature_location = feature.get('location', {})
+            feature_start = feature_location.get('start', {}).get('value')
+            feature_end = feature_location.get('end', {}).get('value')
+            pi_feature_type = FeatureType(value=feature_type)
+            pi_feature_type.save()
+            pi_feature = Feature(description=feature_description, start=feature_start, end=feature_end)
+            pi_feature.save()
         return HttpResponseRedirect(reverse('results', kwargs = {'acession_id_value' : protein_instance.acession_id}))
     else:
-        form = uniprotID()
+        form = ProteinInputForm()
     return render(request, 'form.html', {'form': form})
 
+    
+    # TODO: Isso está no local errado. Não faz parte da validação do form --- OK COLOCAR MAIS ACIMA DEPOIS
+    # if Protein.objects.filter(id=value).exists():
+    #     return HttpResponseRedirect(reverse('results', kwargs = {'pi_id' : value}))  
     
 def resultsView(request, acession_id_value):
     try:
@@ -67,5 +55,5 @@ def resultsView(request, acession_id_value):
         pi_features = protein_instance.feature_set.all()
     except Feature.DoesNotExist:
         raise Http404('Protein instance feature does not exist.')
-    return render(request, 'results.html', {'id': protein_instance.acession_id, 'name': protein_instance.name, 'sequence': protein_instance.sequence, 'feature_type': pi_features.feature_type, 'features': pi_features })
+    return render(request, 'results.html', {'id': protein_instance.acession_id, 'name': protein_instance.name, 'sequence': protein_instance.sequence, 'feature_type and features': pi_features})
 
