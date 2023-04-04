@@ -47,6 +47,6 @@ def resultsView(request, acession_id_value):
     try:
         pi_features = Feature.objects.filter(protein__acession_id=acession_id_value)
     except Feature.DoesNotExist:
-        raise Http404('Protein instance feature does not exist.')
-    return render(request, 'results.html', {'id': protein_instance.acession_id, 'name': protein_instance.name, 'sequence': protein_instance.sequence, 'feature_type_and_features': pi_features})
+        raise Http404('No features associated to given UniProt ID.')
+    return render(request, 'results.html', {'id': protein_instance.acession_id, 'name': protein_instance.name, 'sequence': protein_instance.sequence, 'pi_features': pi_features})
 
