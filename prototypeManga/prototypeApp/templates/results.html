@@ -54,23 +54,4 @@
   </tr>
   {% endfor %}
 </table>
-  {% comment %} <h1>Feature Types and Features</h1>  
-  <table>
-    <tr>
-      <th>Feature Type</th>
-      <th>Description</th>
-      <th>Start</th>
-      <th>End</th>
-    </tr>
-    <tr>
-      {% for pi_feature in pi_features %}
-      <td>{{ pi_feature.feature_type }}</td>
-      <td>{{ pi_feature.description }}</td>
-      <td>{{pi_feature.start}}</td>
-      <td>{{pi_feature.end}}</td>
-    {% empty %}
-      <td>No features found.</td>
-    {% endfor %}
-    </tr>
-  </table>   {% endcomment %}
 {% endblock %}
