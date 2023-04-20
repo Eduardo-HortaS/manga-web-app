@@ -55,7 +55,10 @@ ROOT_URLCONF = 'prototypeManga.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates'],
+        'DIRS': [
+            'templates',
+            'prototypeApp'
+            ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

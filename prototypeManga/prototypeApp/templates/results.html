@@ -27,17 +27,22 @@
     background-color: #e6e6e6;
   }
 </style>
+<div class="container text-center">
+  <div class="row">
+    <div class="col-md-12">
+      <h1 class="mt-5">UniProt ID</h1>
+      <p>{{ id }}</p>
 
-  <h1>UniProt ID</h1>
-  <p>{{ id }}</p>
+      <h1 class="mt-5">Protein Name</h1>
+      <p>{{ name }}</p>
 
-  <h1>Protein Name</h1>
-  <p>{{ name }}</p>
+      <h1 class="mt-5">Sequence</h1>
+      <p style="word-break: break-word;">{{ sequence }}</p>
 
-  <h1>Sequence</h1>
-  <p>{{ sequence }}</p>
-
-  <h1>Feature Types and Features</h1>
+      <h1 class="mt-5">Feature Types and Features</h1>
+    </div>
+  </div>
+</div>
 <table>
   <tr>
     <th>Feature Type</th>

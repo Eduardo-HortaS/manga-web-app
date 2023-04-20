@@ -1,10 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Specify an UniProt ID:</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form }}
-        <input type="submit" value="Submit">
+    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+        <h1 class="mt-5">Specify an UniProt ID:</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form }}
+            <input type="submit" value="Submit">
     </form>
+    </div>
+
 {% endblock %}
