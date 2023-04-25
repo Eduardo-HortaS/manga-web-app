@@ -30,10 +30,7 @@ onload="this.rel = 'stylesheet'"
       <p style="word-break: break-word;">{{ sequence }}</p>
 
       <h1 class="mt-5">Feature Types and Features</h1>
-    </div>
-  </div>
-</div>
-<table id="results-table" class="display" style="width:100%">
+<table id="results-table">
   <thead>
     <tr>
       <th>Feature Type</th>
@@ -50,6 +47,7 @@ onload="this.rel = 'stylesheet'"
       <td>{{ pi_feature.start }}</td>
       <td>{{ pi_feature.end }}</td>
     </tr>
+    {% endfor %}
   </tbody>
   <tfoot>
     <tr>
@@ -59,8 +57,8 @@ onload="this.rel = 'stylesheet'"
       <th>End</th>
     </tr>
   </tfoot>
-  {% endfor %}
 </table>
+</div>
 {% endblock %}
 
 {% comment %} Called on my footer {% endcomment %}
